@@ -1,0 +1,314 @@
+\documentclass[letterpaper,11pt]{article}
+\usepackage{inputenc}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage[T1]{fontenc}
+\usepackage{tgschola}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{minted}
+
+\usemintedstyle{pastie}
+
+\geometry{scale=0.9}
+\author{prosaddas888@gmail.com\\
+Systems and Chemical Biology\\
+CSIR-Institute of Genomics and Integrative Biology (IGIB), New Delhi, India}
+\title{\vspace{-1.0cm}A Quick Introduction to \texttt{Groovy} for \texttt{Nextflow} workflows}
+
+\begin{document}
+	\maketitle
+    \vspace{-0.6cm}
+    \noindent
+    \begin{itemize}
+    
+    \item Printing in groovy can be done with or without the parentheses. 
+    \begin{minted}{groovy}
+println("Hello, World!"); print "Hello, World!" // These two are equivalent
+    \end{minted}
+    
+    \item Comments are C/C++-styled:
+    \begin{minted}{groovy}
+// comment a single line
+/* a comment spanning multiple lines */
+    \end{minted}
+
+    \item Data types. Groovy, being a dynamically-typed language, allows you to work with various data types without having to explicitly declare them. However, it still supports static typing where you can explicitly declare the types. Data types are of five types: \textbf{primitive}, \textbf{object}, \textbf{collections}, \textbf{special types}, and \textbf{groovy-specific types}. Local variables are always declared with \texttt{def} keyword.\\
+    Primitive types:
+    \begin{itemize}
+        \item \textbf{byte}: 8-bit signed integer \mintinline{groovy}{byte b = 1}
+        \item \textbf{short}: 16-bit signed integer \mintinline{groovy}{short s = 10}
+        \item \textbf{int}: 32-bit signed integer \mintinline{groovy}{int i = 100}
+        \item \textbf{long}: 64-bit signed integer \mintinline{groovy}{long l = 1000L}
+        \item \textbf{float}: 32-bit signed floating-point number \mintinline{groovy}{float f = 1.23f}
+        \item \textbf{double}: 64-bit signed floating-point number \mintinline{groovy}{double d = 1.23456789}
+        \item \textbf{char}: 16-bit Unicode character \mintinline{groovy}{char c = "A"}
+        \item \textbf{boolean}: true or false \mintinline{groovy}{boolean b = true}
+    \end{itemize}
+    Object types:
+    \begin{itemize}
+        \item \textbf{String}: sequence of characters \mintinline{groovy}{String str = "Hello, Groovy"}
+        \item \textbf{GString}: Groovy-specfic string with embedded expressions
+        \begin{minted}{groovy}
+def name = "World"
+def greeting = "Hello, ${name}$" // Gstring
+        \end{minted}
+        \item \textbf{Wrapper Classes}: \mintinline{groovy}{Integer intWrapper = 100}
+    \end{itemize}
+Collections:
+    \begin{itemize}
+        \item \textbf{Lists}: \mintinline{groovy}{def list = [1, 2, 3, 4]}
+        \item \textbf{Maps}: \mintinline{groovy}{def map [name: "John", age: 30]}
+        \item \textbf{Sets}: \mintinline{groovy}{def set = [1, 2, 3, 4] as set}
+    \end{itemize}
+Special Types:
+    \begin{itemize}
+        \item \textbf{Ranges}: \mintinline{groovy}{def range = 1..5 // [1, 2, 3, 4, 5]}
+        \item \textbf{Closures}: Anonymous blocks of code that can be assigned to variables, passed as parameters or executed. \mintinline{groovy}{def closure = {println "Hello, Closure"} // Output: Hello, Closure}
+    \end{itemize}
+
+    \item Type casting in Groovy can be done in several ways, similar to Java but with additional syntactic sugar and flexibility. Here are some of the methods to perform type casting in Groovy.
+    \begin{minted}{groovy}
+def num = "123"
+def intNum = num as Integer
+println(intNum) // Output: 123
+    \end{minted}
+Using explicit type casting similar to Java:
+\begin{minted}{groovy}
+def num = "123"
+def intNum = (Integer) num
+println intNum // Output: 123
+\end{minted}
+Using methods for type conversion:
+\begin{minted}{groovy}
+def num = "123"
+def intNum = num.toInteger()
+println intNum // Output: 123
+def num_ = 123
+def strNum = num_.toString()
+println strNum // Output: "123"
+\end{minted}
+String to Integer:
+\begin{minted}{groovy}
+def str = "456"; def intNum = str as Integer; println intNum // Output: 456
+\end{minted}
+String to Double:
+\begin{minted}{groovy}
+def str = "456.78"; def doubleNum = str as Double; println doubleNum // Output: 456.78
+\end{minted}
+Integer to String
+\begin{minted}{groovy}
+def num = 789; def str = num as String; println str // Output: "789"
+\end{minted}
+List to Array
+\begin{minted}{groovy}
+def list = [1, 2, 3]
+def array = list as int[]
+println array // Output: [I@6d6f6e28 (array's memory address)]
+println array.toList() // Output; [1, 2, 3]
+\end{minted}
+
+
+    \item A list object can be defined by placing the list items in square brackets:
+    \begin{minted}{groovy}
+list = [10, 20, 30, 40]
+
+// Get values by index
+println list[0]
+
+// Get values by get method
+println list.get(0)
+
+// length of list
+println list.size()
+
+/* Check values by assert method, prints nothing if
+a condition is true else raise an AssertionError message */
+
+list = [10, 20, 30, 40]
+assert list[0] == 10
+
+// Neagtive indexing can also be used
+list = [0,1,2]
+assert list[-1] == 2
+assert list[-1..0] == list.reverse()
+
+// Appending an item to a list
+list = [1,2,3]
+list1 = list << 4 //or,
+list2 = list + 4
+assert list1 == list2
+
+// to be checked
+assert [1, 2, 3] << 1 == [1, 2, 3, 1]
+assert [1, 2, 3] + [1] == [1, 2, 3, 1]
+assert [1, 2, 3, 1] - [1] == [2, 3]
+assert [1, 2, 3] * 2 == [1, 2, 3, 1, 2, 3]
+assert [1, [2, 3]].flatten() == [1, 2, 3]
+assert [1, 2, 3].reverse() == [3, 2, 1]
+assert [1, 2, 3].collect { it + 3 } == [4, 5, 6]
+assert [1, 2, 3, 1].unique().size() == 3
+assert [1, 2, 3, 1].count(1) == 2
+assert [1, 2, 3, 4].min() == 1
+assert [1, 2, 3, 4].max() == 4
+assert [1, 2, 3, 4].sum() == 10
+assert [4, 2, 1, 3].sort() == [1, 2, 3, 4]
+assert [4, 2, 1, 3].find { it % 2 == 0 } == 4
+assert [4, 2, 1, 3].findAll { it % 2 == 0 } == [4, 2]
+    \end{minted}
+    \item Maps. Maps are like lists that have an arbitrary key instead of an integer. Therefore, the syntax is very much aligned.
+    \begin{minted}{groovy}
+map = [a: 0, b: 1, c: 2]
+assert map["a"] == 0
+assert map.b == 1
+assert map.get("c") == 2
+// Modify items
+map["a"] = "x"
+map.b = "y"
+map.put("c", "z")
+assert map == [a: "x", b: "y", c: "z"]
+    \end{minted}
+    \item String interpolation
+    \begin{minted}{groovy}
+foxtype = "quick"
+foxcolor = ["b", "r", "o", "w", "n"]
+println "The $foxtype ${foxcolor.join()} fox"
+
+x = "Hello"
+y = "World"
+println "$x $y"
+    \end{minted}
+String literals can also be defined using the / character as a delimeter. They are known as \textbf{slashy} string and are useful for defining regular expressions and patterns, as there is no need to escape backslashes. As with double-quote strings they allow to interpolate variables prefixed with a \$ character.
+    \begin{minted}{groovy}
+x = /tic\tac\toe/
+y = 'tic\tac\toe'
+z = "tic\tac\toe"
+    \end{minted}
+Multiline strings can be defined by delimiting it with triple or single or double quotes
+\begin{minted}{groovy}
+text = """
+    Hello there!
+    How are you today?
+    """
+\end{minted}
+The same can also acheived by using / as delimeter:
+\begin{minted}{groovy}
+text = /
+    Hello there!
+    Isn't is amazing?
+    /
+\end{minted}
+
+\item If statement:
+\begin{minted}{groovy}
+if (< boolean expression >) {
+    // truth branch
+}
+else {
+    //false branch
+}
+\end{minted}
+The \texttt{else} branch is optional. Also, the curly brackets are optional when the branch defines a single statement.
+\begin{minted}{groovy}
+x = 1
+if (x > 10)
+    println "Hello"
+\end{minted}
+\texttt{null}, empty strings, and empty collections are evaluated to \texttt{false}. Therefore statements like:
+\begin{minted}{groovy}
+list = [1, 2, 3]
+if (list != null && list.size() > 0) {
+    println list
+}
+else {
+    println "The list is empty"
+}
+\end{minted}
+Can be written as:
+\begin{minted}{groovy}
+list = [1, 2, 3]
+if (list)
+    println list
+else
+    println "The list is empty"
+\end{minted}
+\textbf{Tip} In some cases it can be useful to replace to the \texttt{if} statement with a ternary expression (aka a conditional expression):
+\begin{minted}{groovy}
+println list ? list: "The list is empty"
+\end{minted}
+The previous statement can be further simplified using the \textbf{Elvis operator}
+\begin{minted}{groovy}
+println list ?: "The list is empty"    
+\end{minted}
+
+\item For statement
+\begin{minted}{groovy}
+for (int i = 0; i < 3; i++) {
+    println("Hello World $i")
+} 
+\end{minted}
+Iteration over list objects is also possible using the syntax below:
+\begin{minted}{groovy}
+list = ["a", "b", "c"]
+for (String elem:list) {
+    println elm
+}
+\end{minted}
+
+\item Functions
+\begin{minted}{groovy}
+def fib(int n) {
+    return n < 2 ? 1 : fib(n - 1) + fib(n - 2)
+}
+// Call
+assert fib(10) == 89
+\end{minted}
+A function can take multiple arguments separating them with a comma. The \texttt{return} keyword can be omitted and function implicitly returns the value of the last evaluated expression. Also, explicit types can be omitted, though not recommended:
+\begin{minted}{groovy}
+def fact(n) {
+    n > 1 ? n * fact(n - 1) : 1
+}
+// Call
+assert fact(5) == 120
+\end{minted}
+
+\item Closures, they are the Swiss army knife of Nextflow/Groovy programming. In a nutshell, a closure is a block of code that can be passed as an argument to a function. A closure can also be used to define an anonymous function. More formally, a closure allows the definition of functions as first-class objects.
+\begin{minted}{groovy}
+square = { it * it }
+\end{minted}
+The curly braces around the expression \texttt{it * it} tells the script interpreter to treat this expression as code. The \texttt{it} identifier is an implicit variable that represents the value that is passed to the function when it is invoked. Once compiled, the function object is assigned to the variable \texttt{square} as any other variable assignment shown previously. To invoke the closure execution use the special method \texttt{call} or just the parentheses to specify the closure parameter(s).
+\begin{minted}{groovy}
+assert square.call(5) == 25
+assert square(9) == 81
+\end{minted}
+The \texttt{square} function can be passed to other functions or methods. Some built-in functions take a function like this as an argument. One example is the \texttt{collect} method on lists:
+\begin{minted}{groovy}
+x = [1, 2, 3, 4].collect(square)
+println x // Output: [1, 4, 9, 16]
+\end{minted}
+By default, closures take a single parameter called \texttt{it}. To give it a different name use the \texttt{->} syntax.
+\begin{minted}{groovy}
+square = { num -> num * num}
+\end{minted}
+It is also possible to define closures with multiple, custom-named parameters. For example, when the method \texttt{each()} is applied to a map it can take a closure with two arguments, to which it passes the \textit{key-value} pair for each entry in the \texttt{map} object. For example:
+\begin{minted}{groovy}
+printMap = {a, b -> println "$a with value $b"}
+values = ["Yue": "Wu", "Mark": "Williams", "John": "Doe"]
+values.each(printMap)
+
+/* Output
+Yue with value Wu
+Mark with value Williams
+John with value Doe
+*/
+\end{minted}
+A closure has two other important features. First, it can access and modify variables in the scope where it is defined. Second, a closure can be defined in an \textit{anonymous} manner, meaning that it is not given a name, and is only defined in the place where it needs to be used. For example:
+\begin{minted}{groovy}
+result = 0
+values = ["China": 1, "India": 2, "USA": 3]
+values.keySet().each { result += values[it] } // Output: 6
+\end{minted}
+\end{itemize}
+
+    
+\end{document}
