@@ -1,1 +1,1 @@
-# quick-intro-to-Groovy
+# Quick introduction to Groovy for Nextflow
